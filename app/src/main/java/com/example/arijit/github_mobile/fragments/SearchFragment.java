@@ -4,15 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.arijit.github_mobile.R;
-import com.example.arijit.github_mobile.model.UserDetails;
-import com.example.arijit.github_mobile.model.UserRepoDetails;
+import com.example.arijit.github_mobile.adapter.SearchRepoAdapter;
+import com.example.arijit.github_mobile.model.SearchRepoDetails;
+import com.example.arijit.github_mobile.model.SearchRepoItems;
 import com.example.arijit.github_mobile.pref.AppPreference;
 import com.example.arijit.github_mobile.rest.ApiInterface;
 import com.example.arijit.github_mobile.rest.Client;
@@ -40,6 +46,11 @@ public class SearchFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EditText mSearchText;
+    private Button mSearchButton;
+    private RecyclerView mMenuList;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,30 +90,48 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment\
         View base = inflater.inflate(R.layout.fragment_search, container, false);
-        makeRepoDetailsRequest();
+        mSearchButton = base.findViewById(R.id.search_button);
+        mSearchText = base.findViewById(R.id.search_edittext);
+        mMenuList = base.findViewById(R.id.menu_list_search);
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(mSearchText.getText())) {
+                    makeRepoSearchRequest(mSearchText.getText().toString());
+                }
+            }
+        });
         return base;
     }
 
-    private void makeRepoDetailsRequest() {
+    private void makeRepoSearchRequest(String text) {
 
         if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
             ApiInterface apiService =
                     Client.getClient().create(ApiInterface.class);
-            Call<List<UserRepoDetails>> call = apiService.getUserRepoDetails(AppPreference.getInstance().getAccessToken());
-            call.enqueue(new Callback<List<UserRepoDetails>>() {
+            Call<SearchRepoItems> call = apiService.getSearchRepoDetails("stars","desc", text);
+            call.enqueue(new Callback<SearchRepoItems>() {
 
                 @Override
-                public void onResponse(Call<List<UserRepoDetails>> call, Response<List<UserRepoDetails>> response) {
-                    List<UserRepoDetails> rs = response.body();
+                public void onResponse(Call<SearchRepoItems> call, Response<SearchRepoItems> response) {
+                    List<SearchRepoDetails> rs = response.body().getSearchlist();
+                    populateView(rs);
                 }
 
                 @Override
-                public void onFailure(Call<List<UserRepoDetails>> call, Throwable t) {
+                public void onFailure(Call<SearchRepoItems> call, Throwable t) {
                     Log.e("aro", "profile request failure " + t.toString());
                 }
             });
         }
     }
+
+    private void populateView(List<SearchRepoDetails> rs) {
+        mMenuList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mMenuList.setAdapter(new SearchRepoAdapter(getContext(), rs));
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

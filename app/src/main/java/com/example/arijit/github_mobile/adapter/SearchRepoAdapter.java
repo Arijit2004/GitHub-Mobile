@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.arijit.github_mobile.R;
+import com.example.arijit.github_mobile.model.SearchRepoDetails;
 import com.example.arijit.github_mobile.model.UserRepoDetails;
 
 import java.util.List;
@@ -16,33 +17,34 @@ import java.util.List;
  * Created by arijit on 04/12/17.
  */
 
-public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.Holder> {
+public class SearchRepoAdapter extends RecyclerView.Adapter<SearchRepoAdapter.Holder> {
 
-    private List<UserRepoDetails> itemList;
+    private List<SearchRepoDetails> itemList;
     private LayoutInflater inflater;
 
-    public RepoAdapter(Context context, List<UserRepoDetails> itemList) {
+    public SearchRepoAdapter(Context context, List<SearchRepoDetails> itemList) {
         this.itemList = itemList;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public RepoAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.repo_item_layout, parent, false);
+    public SearchRepoAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.search_repo_item_layout, parent, false);
         Holder holder = new Holder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(RepoAdapter.Holder holder, int position) {
-        final UserRepoDetails details = itemList.get(position);
+    public void onBindViewHolder(SearchRepoAdapter.Holder holder, int position) {
+        final SearchRepoDetails details = itemList.get(position);
         holder.name.setText("Name" + " - " + details.getName());
         holder.fullname.setText("Path" + " - " + details.getFullName());
         holder.type.setText("Private" + " - " + String.valueOf(details.isType()));
         holder.description.setText("Description" + " - " + details.getDescription());
-        holder.licence.setText("Licence" + " - " + details.getLicense());
         holder.language.setText("Language" + " - " + details.getLanguage());
         holder.watchers.setText("Watchers" + " - " + details.getWatchers());
+        holder.forks.setText("Forks" + " - " + details.getForks());
+        holder.stars.setText("Stars" + " - " + details.getStars());
 
     }
 
@@ -61,23 +63,26 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.Holder> {
 
         TextView description;
 
-        TextView licence;
-
         TextView language;
 
         TextView watchers;
+
+        TextView forks;
+
+        TextView stars;
 
 
 
         public Holder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.name);
-            fullname = itemView.findViewById(R.id.fullname);
-            type = itemView.findViewById(R.id.type);
-            description = itemView.findViewById(R.id.description);
-            licence = itemView.findViewById(R.id.license);
-            language = itemView.findViewById(R.id.language);
-            watchers = itemView.findViewById(R.id.watchers);
+            name = itemView.findViewById(R.id.search_name);
+            fullname = itemView.findViewById(R.id.search_fullname);
+            type = itemView.findViewById(R.id.search_type);
+            description = itemView.findViewById(R.id.search_description);
+            language = itemView.findViewById(R.id.search_language);
+            watchers = itemView.findViewById(R.id.search_watchers);
+            forks = itemView.findViewById(R.id.search_forks);
+            stars = itemView.findViewById(R.id.search_stars);
 //            ButterKnife.bind(this, this.itemView);
         }
     }

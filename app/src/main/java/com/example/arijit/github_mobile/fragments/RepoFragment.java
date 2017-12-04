@@ -20,11 +20,8 @@ import com.example.arijit.github_mobile.pref.AppPreference;
 import com.example.arijit.github_mobile.rest.ApiInterface;
 import com.example.arijit.github_mobile.rest.Client;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -1,6 +1,8 @@
 package com.example.arijit.github_mobile.rest;
 
 import com.example.arijit.github_mobile.model.AccessToken;
+import com.example.arijit.github_mobile.model.SearchRepoDetails;
+import com.example.arijit.github_mobile.model.SearchRepoItems;
 import com.example.arijit.github_mobile.model.UserDetails;
 import com.example.arijit.github_mobile.model.UserRepoDetails;
 
@@ -37,5 +39,17 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @GET("user/repos")
     Call<List<UserRepoDetails>> getUserRepoDetails(@Query("access_token") String accessToken);
+
+//    @Headers("Accept: application/json")
+//    @GET("/search/repositories?sort=stars&order=desc&q=tetris")
+//    Call<List<SearchRepoDetails>> getSearchRepoDetails(@Query("access_token") String accessToken);
+
+    @Headers("Accept: application/json")
+    @GET("/search/repositories")
+    Call<SearchRepoItems> getSearchRepoDetails(
+            @Query("sort") String sort,
+            @Query("order") String order,
+            @Query("q") String q);
+
 
 }
