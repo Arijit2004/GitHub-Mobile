@@ -1,5 +1,6 @@
 package com.example.arijit.github_mobile.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class RepoFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private RecyclerView mMenuList;
+    private ProgressDialog mDialog;
 
     Unbinder unbinder;
 
@@ -86,6 +88,7 @@ public class RepoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View base = inflater.inflate(R.layout.fragment_repo, container, false);
         mMenuList = base.findViewById(R.id.menuList);
+        mDialog = new ProgressDialog(getActivity());
         makeRepoDetailsRequest();
         return base;
     }
@@ -93,6 +96,10 @@ public class RepoFragment extends Fragment {
     private void makeRepoDetailsRequest() {
 
         if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
+            if (mDialog != null) {
+                mDialog.setTitle("Loading");
+                mDialog.show();
+            }
             ApiInterface apiService =
                     Client.getClient().create(ApiInterface.class);
             Call<List<UserRepoDetails>> call = apiService.getUserRepoDetails(AppPreference.getInstance().getAccessToken());
@@ -102,10 +109,16 @@ public class RepoFragment extends Fragment {
                 public void onResponse(Call<List<UserRepoDetails>> call, Response<List<UserRepoDetails>> response) {
                     List<UserRepoDetails> rs = response.body();
                     popuateView(rs);
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<List<UserRepoDetails>> call, Throwable t) {
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
                 }
             });
         }

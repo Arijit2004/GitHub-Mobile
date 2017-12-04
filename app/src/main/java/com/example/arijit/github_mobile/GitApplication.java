@@ -19,7 +19,6 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 public class GitApplication extends Application {
 
     private static Context context;
-    private RequestQueue mRequestQueue;
 
     private static GitApplication mInstance;
 

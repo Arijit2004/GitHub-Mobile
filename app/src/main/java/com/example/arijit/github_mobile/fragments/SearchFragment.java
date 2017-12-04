@@ -1,5 +1,6 @@
 package com.example.arijit.github_mobile.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +51,8 @@ public class SearchFragment extends Fragment {
     private Button mSearchButton;
     private RecyclerView mMenuList;
 
+    private ProgressDialog mDialog;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -92,6 +95,7 @@ public class SearchFragment extends Fragment {
         mSearchButton = base.findViewById(R.id.search_button);
         mSearchText = base.findViewById(R.id.search_edittext);
         mMenuList = base.findViewById(R.id.menu_list_search);
+        mDialog = new ProgressDialog(getActivity());
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +111,10 @@ public class SearchFragment extends Fragment {
     private void makeRepoSearchRequest(String text) {
 
         if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
+            if (mDialog != null) {
+                mDialog.setTitle("Loading");
+                mDialog.show();
+            }
             ApiInterface apiService =
                     Client.getClient().create(ApiInterface.class);
             Call<SearchRepoItems> call = apiService.getSearchRepoDetails("stars","desc", text);
@@ -115,12 +123,18 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onResponse(Call<SearchRepoItems> call, Response<SearchRepoItems> response) {
                     List<SearchRepoDetails> rs = response.body().getSearchlist();
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
                     populateView(rs);
                 }
 
                 @Override
                 public void onFailure(Call<SearchRepoItems> call, Throwable t) {
                     Log.e("aro", "profile request failure " + t.toString());
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
                 }
             });
         }
