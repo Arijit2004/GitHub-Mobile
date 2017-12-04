@@ -4,11 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.arijit.github_mobile.R;
+import com.example.arijit.github_mobile.model.UserDetails;
+import com.example.arijit.github_mobile.model.UserRepoDetails;
+import com.example.arijit.github_mobile.pref.AppPreference;
+import com.example.arijit.github_mobile.rest.ApiInterface;
+import com.example.arijit.github_mobile.rest.Client;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,8 +77,31 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        // Inflate the layout for this fragment\
+        View base = inflater.inflate(R.layout.fragment_search, container, false);
+        makeRepoDetailsRequest();
+        return base;
+    }
+
+    private void makeRepoDetailsRequest() {
+
+        if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
+            ApiInterface apiService =
+                    Client.getClient().create(ApiInterface.class);
+            Call<List<UserRepoDetails>> call = apiService.getUserRepoDetails(AppPreference.getInstance().getAccessToken());
+            call.enqueue(new Callback<List<UserRepoDetails>>() {
+
+                @Override
+                public void onResponse(Call<List<UserRepoDetails>> call, Response<List<UserRepoDetails>> response) {
+                    List<UserRepoDetails> rs = response.body();
+                }
+
+                @Override
+                public void onFailure(Call<List<UserRepoDetails>> call, Throwable t) {
+                    Log.e("aro", "profile request failure " + t.toString());
+                }
+            });
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

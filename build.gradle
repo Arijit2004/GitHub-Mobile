@@ -25,3 +25,8 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext{
+    butterKnifeVersion = "8.6.0"
+    supportLibs = "26.1.0"
+}

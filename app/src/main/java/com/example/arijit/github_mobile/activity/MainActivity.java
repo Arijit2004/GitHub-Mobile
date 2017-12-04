@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.arijit.github_mobile.R;
 import com.example.arijit.github_mobile.constants.Constants;
 import com.example.arijit.github_mobile.fragments.ProfileFragment;
+import com.example.arijit.github_mobile.fragments.RepoFragment;
 import com.example.arijit.github_mobile.fragments.SearchFragment;
 import com.example.arijit.github_mobile.helper.BottomNavigationViewHelper;
 import com.example.arijit.github_mobile.model.AccessToken;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, RepoFragment.OnFragmentInteractionListener {
 
     private FragmentManager mFragmentManager;
     private static BottomNavigationView navigation;
@@ -101,13 +102,23 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 case R.id.search_menu:
                     ActivityUtil.replaceFragmentToActivity(mFragmentManager, new SearchFragment(), R.id.fragment_container);
                     return true;
-                case R.id.logout:
+                case R.id.repo_menu:
                     //
+                    ActivityUtil.replaceFragmentToActivity(mFragmentManager, new RepoFragment(), R.id.fragment_container);
+//                    AppPreference.getInstance().setAccessToken(null);
+//                    Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
+////                    myIntent.putExtra("", value); //Optional parameters
+//                    MainActivity.this.startActivity(myIntent);
+//                    finish();
+                    return true;
+                case R.id.logout_menu:
                     AppPreference.getInstance().setAccessToken(null);
+                    AppPreference.getInstance().setAuthCode(null);
+
                     Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
-//                    myIntent.putExtra("", value); //Optional parameters
+////                    myIntent.putExtra("", value); //Optional parameters
                     MainActivity.this.startActivity(myIntent);
-                    finish();
+                   finish();
                     return true;
             }
             return false;

@@ -9,13 +9,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.arijit.github_mobile.R;
 import com.example.arijit.github_mobile.constants.Constants;
 import com.example.arijit.github_mobile.model.AccessToken;
+import com.example.arijit.github_mobile.model.UserDetails;
 import com.example.arijit.github_mobile.pref.AppPreference;
 import com.example.arijit.github_mobile.rest.ApiClient;
 import com.example.arijit.github_mobile.rest.ApiInterface;
+import com.example.arijit.github_mobile.rest.Client;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +55,10 @@ public class LoginActivity extends AppCompatActivity {
                             "&scopes=repo&redirect_uri=" + Constants.REDIRECT_URI));
                     startActivity(intent);
                     finish();
+                } else {
+                    Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+//                        myIntent.putExtra("key", value); //Optional parameters
+                    LoginActivity.this.startActivity(myIntent);
                 }
 
             }
@@ -69,22 +76,27 @@ public class LoginActivity extends AppCompatActivity {
             String code = uri.getQueryParameter("code");
             Log.e("aro", "auth code success on resume " + code);
             AppPreference.getInstance().setAuthCode(code);
-            if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken())) {
+            if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) && !TextUtils.isEmpty(AppPreference.getInstance().getAuthCode())) {
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
                 Call<AccessToken> call = apiService.getAccessToken(Constants.CLIENT_ID, Constants.CLIENT_SECRET, code);
                 call.enqueue(new Callback<AccessToken>() {
                     @Override
                     public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                        Log.e("aro", "access token success " + response.body().getAccessToken());
-                        AppPreference.getInstance().setAccessToken(response.body().getAccessToken());
-
-                        Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+                        if (response.body() != null && response.body().getAccessToken() != null) {
+                            Log.e("aro", "access token success " + response.body().getAccessToken());
+                            AppPreference.getInstance().setAccessToken(response.body().getAccessToken());
+//                           makeProfileDataRequest();
+                            Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
 //                        myIntent.putExtra("key", value); //Optional parameters
-                        LoginActivity.this.startActivity(myIntent);
+                            LoginActivity.this.startActivity(myIntent);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(),"Something went wrong. Please try afer sometime".toString(), Toast.LENGTH_SHORT).show();
+                        }
+
 
                     }
-
                     @Override
                     public void onFailure(Call<AccessToken> call, Throwable t) {
                         Log.e("aro", "access token failure " + t.toString());
@@ -99,6 +111,38 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
+        }
+
+//        makeProfileDataRequest();
+    }
+
+    private void makeProfileDataRequest() {
+
+        if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
+            ApiInterface apiService =
+                    Client.getClient().create(ApiInterface.class);
+            Call<UserDetails> call = apiService.getUserDetails(AppPreference.getInstance().getAccessToken());
+            call.enqueue(new Callback<UserDetails>() {
+                @Override
+                public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {
+
+                    if (response != null ) {
+                        AppPreference.getInstance().setUser(response.body());
+                    }
+                    Log.e("aro", "user details success " + response.body().getLogin());
+                    Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+//                        myIntent.putExtra("key", value); //Optional parameters
+                    LoginActivity.this.startActivity(myIntent);
+                    finish();
+
+
+                }
+
+                @Override
+                public void onFailure(Call<UserDetails> call, Throwable t) {
+                    Log.e("aro", "get user details failed " + t.toString());
+                }
+            });
         }
     }
 

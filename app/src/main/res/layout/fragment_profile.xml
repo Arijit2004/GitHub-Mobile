@@ -1,13 +1,142 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.arijit.github_mobile.fragments.ProfileFragment">
+    android:fillViewport="true"
+    android:scrollbars="none">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="profile fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.arijit.github_mobile.fragments.ProfileFragment">
+
+            <!-- TODO: Update blank fragment layout -->
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_view_stream_black_24dp" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_image"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center_horizontal"
+                android:text="Nikola Tesla"
+                android:textSize="20dp" />
+
+            <View
+                android:id="@+id/div1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_name"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div1"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="15dp"
+                android:text="Email"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/div2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_email"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/profile_followers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div2"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="15dp"
+                android:text="Followers"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/div3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_followers"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/profile_following"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div3"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="15dp"
+                android:text="Following"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/div4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_following"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/profile_last_updated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div4"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="15dp"
+                android:text="Last Updated"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/div5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_last_updated"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray" />
+
+
+
+            <TextView
+                android:id="@+id/app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div5"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="35dp"
+                android:gravity="center_horizontal"
+                android:text="Version 0.0.0.1"
+                android:textSize="15dp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
