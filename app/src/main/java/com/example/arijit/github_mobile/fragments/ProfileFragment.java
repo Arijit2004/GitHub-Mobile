@@ -1,43 +1,27 @@
 package com.example.arijit.github_mobile.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.arijit.github_mobile.R;
-import com.example.arijit.github_mobile.activity.LoginActivity;
-import com.example.arijit.github_mobile.activity.MainActivity;
-import com.example.arijit.github_mobile.constants.Constants;
-import com.example.arijit.github_mobile.model.AccessToken;
 import com.example.arijit.github_mobile.model.UserDetails;
 import com.example.arijit.github_mobile.pref.AppPreference;
-import com.example.arijit.github_mobile.rest.ApiClient;
 import com.example.arijit.github_mobile.rest.ApiInterface;
 import com.example.arijit.github_mobile.rest.Client;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-//import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +93,11 @@ public class ProfileFragment extends Fragment {
         mFollowing = base.findViewById(R.id.profile_following);
         mLastUpdated = base.findViewById(R.id.profile_last_updated);
         mAvatar = base.findViewById(R.id.profile_image);
-        makeProfileDataRequest();
+        if (AppPreference.getInstance().getUser().getLogin() == null) {
+            makeProfileDataRequest();
+        } else {
+            populateProfile(AppPreference.getInstance().getUser());
+        }
         return base;
     }
 
@@ -136,27 +124,27 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {
 
-                    populateProfile(response);
-                    Log.e("aro", "profile request success " + response.body().getLogin());
-
+                    if (response != null ) {
+                        AppPreference.getInstance().setUser(response.body());
+                        populateProfile(response.body());
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<UserDetails> call, Throwable t) {
-                    Log.e("aro", "profile request failure " + t.toString());
                 }
             });
         }
     }
 
-    private void populateProfile(Response<UserDetails> response) {
-        mName.setText(response.body().getLogin());
-        mEmails.setText( mEmails.getText() + " - " + response.body().getEmail());
-        mFollowers.setText( mFollowers.getText() + " - " + response.body().getFollowers());
-        mFollowing.setText( mFollowing.getText() + " - " + response.body().getFollowing());
-        mLastUpdated.setText( mLastUpdated.getText() + " - " + response.body().getUpdated_at());
+    private void populateProfile(UserDetails response) {
+        mName.setText(response.getLogin());
+        mEmails.setText( mEmails.getText() + " - " + response.getEmail());
+        mFollowers.setText( mFollowers.getText() + " - " + response.getFollowers());
+        mFollowing.setText( mFollowing.getText() + " - " + response.getFollowing());
+        mLastUpdated.setText( mLastUpdated.getText() + " - " + response.getUpdated_at());
 
-        Glide.with(this).load(response.body().getAvatarUrl()).into(mAvatar);
+        Glide.with(this).load(response.getAvatarUrl()).into(mAvatar);
 
     }
 

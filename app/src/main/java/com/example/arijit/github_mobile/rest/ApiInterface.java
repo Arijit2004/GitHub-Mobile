@@ -1,7 +1,6 @@
 package com.example.arijit.github_mobile.rest;
 
 import com.example.arijit.github_mobile.model.AccessToken;
-import com.example.arijit.github_mobile.model.SearchRepoDetails;
 import com.example.arijit.github_mobile.model.SearchRepoItems;
 import com.example.arijit.github_mobile.model.UserDetails;
 import com.example.arijit.github_mobile.model.UserRepoDetails;

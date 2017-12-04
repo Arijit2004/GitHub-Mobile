@@ -2,13 +2,10 @@ package com.example.arijit.github_mobile.pref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import com.example.arijit.github_mobile.GitApplication;
 import com.example.arijit.github_mobile.model.UserDetails;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
 
 /**
  * Created by arijit on 03/12/17.
@@ -76,7 +73,7 @@ public class AppPreference {
         }
     }
 
-    public void clearCart() {
-        prefs.edit().remove(KEY_USER_DETAILS);
+    public void clearUser() {
+        prefs.edit().remove(KEY_USER_DETAILS).apply();
     }
 }

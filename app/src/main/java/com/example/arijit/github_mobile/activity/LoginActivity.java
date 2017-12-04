@@ -38,9 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton = findViewById(R.id.login_button);
 
         if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken())) {
-            Log.e("aro", "access code success " + AppPreference.getInstance().getAccessToken());
             Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-//                        myIntent.putExtra("key", value); //Optional parameters
             LoginActivity.this.startActivity(myIntent);
             finish();
         }
@@ -50,14 +48,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken())) {
-                    Log.e("aro", "onCreate access token null");
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GITHUB_AUTH_URL + "?client_id=" + Constants.CLIENT_ID +
                             "&scopes=repo&redirect_uri=" + Constants.REDIRECT_URI));
                     startActivity(intent);
                     finish();
                 } else {
                     Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-//                        myIntent.putExtra("key", value); //Optional parameters
                     LoginActivity.this.startActivity(myIntent);
                 }
 
@@ -74,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         Uri uri = getIntent().getData();
         if (uri != null && uri.toString().startsWith(Constants.REDIRECT_URI)) {
             String code = uri.getQueryParameter("code");
-            Log.e("aro", "auth code success on resume " + code);
             AppPreference.getInstance().setAuthCode(code);
             if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) && !TextUtils.isEmpty(AppPreference.getInstance().getAuthCode())) {
                 ApiInterface apiService =
@@ -84,11 +79,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                         if (response.body() != null && response.body().getAccessToken() != null) {
-                            Log.e("aro", "access token success " + response.body().getAccessToken());
                             AppPreference.getInstance().setAccessToken(response.body().getAccessToken());
-//                           makeProfileDataRequest();
                             Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-//                        myIntent.putExtra("key", value); //Optional parameters
+
                             LoginActivity.this.startActivity(myIntent);
                             finish();
                         } else {
@@ -99,21 +92,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Call<AccessToken> call, Throwable t) {
-                        Log.e("aro", "access token failure " + t.toString());
                     }
                 });
             }
         } else {
-            Log.e("aro", "uri null");
             Log.e("aro", "last saved token " + AppPreference.getInstance().getAccessToken());
             if (uri != null) {
-                Log.e("aro", "uri details " + uri.toString());
             }
 
 
         }
-
-//        makeProfileDataRequest();
     }
 
     private void makeProfileDataRequest() {
@@ -129,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                     if (response != null ) {
                         AppPreference.getInstance().setUser(response.body());
                     }
-                    Log.e("aro", "user details success " + response.body().getLogin());
                     Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
 //                        myIntent.putExtra("key", value); //Optional parameters
                     LoginActivity.this.startActivity(myIntent);
@@ -140,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<UserDetails> call, Throwable t) {
-                    Log.e("aro", "get user details failed " + t.toString());
                 }
             });
         }

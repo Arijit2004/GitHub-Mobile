@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.arijit.github_mobile.R;
 import com.example.arijit.github_mobile.model.SearchRepoDetails;
-import com.example.arijit.github_mobile.model.UserRepoDetails;
 
 import java.util.List;
 

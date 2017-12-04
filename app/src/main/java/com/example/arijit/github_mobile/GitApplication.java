@@ -28,7 +28,7 @@ public class GitApplication extends Application {
         super.onCreate();
 //        Fabric.with(this, new Crashlytics());
         context = this;
-        initImageLoader();
+//        initImageLoader();
     }
 
     private void initImageLoader() {
