@@ -50,11 +50,17 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken())) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GITHUB_AUTH_URL + "?client_id=" + Constants.CLIENT_ID +
                             "&scopes=repo&redirect_uri=" + Constants.REDIRECT_URI));
-                    startActivity(intent);
-                    finish();
+//                    startActivity(intent);
+//                    finish();
+                    Intent myIntent = new Intent(LoginActivity.this, WebViewActivity.class);
+                    myIntent.putExtra("URI_STRING", Constants.GITHUB_AUTH_URL + "?client_id=" + Constants.CLIENT_ID +
+                            "&scopes=repo&redirect_uri=" + Constants.REDIRECT_URI); //Optional parameters
+                    LoginActivity.this.startActivity(myIntent);
+
                 } else {
                     Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                     LoginActivity.this.startActivity(myIntent);
+
                 }
 
             }
