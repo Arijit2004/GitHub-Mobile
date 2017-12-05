@@ -72,70 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        Uri uri = getIntent().getData();
-        if (uri != null && uri.toString().startsWith(Constants.REDIRECT_URI)) {
-            String code = uri.getQueryParameter("code");
-            AppPreference.getInstance().setAuthCode(code);
-            if (TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) && !TextUtils.isEmpty(AppPreference.getInstance().getAuthCode())) {
-                ApiInterface apiService =
-                        ApiClient.getClient().create(ApiInterface.class);
-                Call<AccessToken> call = apiService.getAccessToken(Constants.CLIENT_ID, Constants.CLIENT_SECRET, code);
-                call.enqueue(new Callback<AccessToken>() {
-                    @Override
-                    public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                        if (response.body() != null && response.body().getAccessToken() != null) {
-                            AppPreference.getInstance().setAccessToken(response.body().getAccessToken());
-                            Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-
-                            LoginActivity.this.startActivity(myIntent);
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(),"Something went wrong. Please try afer sometime".toString(), Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-                    @Override
-                    public void onFailure(Call<AccessToken> call, Throwable t) {
-                    }
-                });
-            }
-        } else {
-            Log.e("aro", "last saved token " + AppPreference.getInstance().getAccessToken());
-            if (uri != null) {
-            }
-
-
-        }
-    }
-
-    private void makeProfileDataRequest() {
-
-        if (!TextUtils.isEmpty(AppPreference.getInstance().getAccessToken()) ) {
-            ApiInterface apiService =
-                    Client.getClient().create(ApiInterface.class);
-            Call<UserDetails> call = apiService.getUserDetails(AppPreference.getInstance().getAccessToken());
-            call.enqueue(new Callback<UserDetails>() {
-                @Override
-                public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {
-
-                    if (response != null ) {
-                        AppPreference.getInstance().setUser(response.body());
-                    }
-                    Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-//                        myIntent.putExtra("key", value); //Optional parameters
-                    LoginActivity.this.startActivity(myIntent);
-                    finish();
-
-
-                }
-
-                @Override
-                public void onFailure(Call<UserDetails> call, Throwable t) {
-                }
-            });
-        }
+        
     }
 
 }
